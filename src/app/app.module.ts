@@ -39,7 +39,7 @@ import { EditarAgendaModalComponent } from './pages/operador/editar-agenda-modal
 import { TurnosDialogComponent } from './pages/operador/turnos-dialog/turnos-dialog.component';
 import { TurnoNotasDialogComponent } from './pages/medico/turnos-programados/turno-notas-dialog/turno-notas-dialog.component';
 import { TurnoConfirmadoDialogComponent } from './pages/paciente/nuevo-turno/turno-confirmado-dialog/turno-confirmado-dialog.component';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 
@@ -88,7 +88,8 @@ registerLocaleData(localeEs, 'es');
     MatCardModule,
     MatIconModule,
     MatTableModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSnackBarModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' }

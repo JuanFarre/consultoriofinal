@@ -17,7 +17,8 @@ export class MisTurnosComponent implements OnInit {
   }
 
   obtenerTurnos(): void {
-    const idPaciente = 2; // Reemplaza con el ID del paciente correspondiente
+    const datosUsuario = JSON.parse(localStorage.getItem('datosUsuario') || '{}');
+    const idPaciente = datosUsuario.id || 0;
     const token = localStorage.getItem('token'); // Obtén el token desde el almacenamiento local
 
     if (!token) {

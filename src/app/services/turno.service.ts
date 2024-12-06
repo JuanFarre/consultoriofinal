@@ -27,7 +27,6 @@ export class TurnoService {
     return this.http.get<any>(`${this.apiUrl}/obtenerAgenda/${id_medico}`, { headers });
   }
 
-
   obtenerTurnosPaciente(id: number): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -41,6 +40,14 @@ export class TurnoService {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
     return this.http.post<any>(`${this.apiUrl}/obtenerTurnosMedico`, { id_medico, fecha }, { headers });
+  }
+
+  obtenerTurnosReservados(id_medico: number, fecha: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+    return this.http.get<any>(`${this.apiUrl}/obtenerTurnosReservados/${id_medico}/${fecha}`, { headers });
   }
 
   actualizarTurno(id: number, turno: Turno): Observable<any> {

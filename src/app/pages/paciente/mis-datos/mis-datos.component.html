@@ -1,85 +1,84 @@
 <div class="container">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Mis Datos Personales</mat-card-title>
-        <mat-card-subtitle>{{ paciente.nombre }} {{ paciente.apellido }}</mat-card-subtitle>
-      </mat-card-header>
-  
-      <mat-card-content>
-        <p><strong>Email:</strong> {{ datosForm.get('email')?.value || paciente.email }}</p>
-        <p><strong>Teléfono:</strong> {{ datosForm.get('telefono')?.value || paciente.telefono }}</p>
-        <p><strong>DNI:</strong> {{ paciente.dni }}</p>
-        <p><strong>Fecha de Nacimiento:</strong> {{ paciente.fechaNacimiento | date }}</p>
-        <p><strong>Contraseña:</strong>
-          <span *ngIf="!showPassword">{{ '••••••••' }}</span>
-          <span *ngIf="showPassword">{{ datosForm.get('password')?.value || paciente.password }}</span>
-          <button mat-icon-button (click)="togglePasswordVisibility()">
-            <mat-icon class="eye-button">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-          </button>
-        </p>
-      </mat-card-content>
-  
-      <mat-card-actions>
-        <button mat-raised-button color="primary" (click)="editarDatos()">Cambiar Mis Datos</button>
-      </mat-card-actions>
-    </mat-card>
-  
-    <mat-dialog-content *ngIf="isEditing">
-      <h3><strong>Editar Datos</strong></h3>
-      <form [formGroup]="datosForm" (ngSubmit)="guardarCambios()">
-  
-        <!-- Campo Email -->
-        <mat-form-field appearance="fill">
-          <mat-label>Email</mat-label>
-          <input matInput placeholder="Correo electrónico" formControlName="email" type="email">
-          <mat-error *ngIf="datosForm.get('email')?.hasError('required')">
-            El correo es requerido
-          </mat-error>
-          <mat-error *ngIf="datosForm.get('email')?.hasError('email')">
-            Formato de correo inválido
-          </mat-error>
-        </mat-form-field>
-  
-        <!-- Campo Teléfono -->
-        <mat-form-field appearance="fill">
-          <mat-label>Teléfono</mat-label>
-          <input matInput placeholder="Número de teléfono" formControlName="telefono" type="tel">
-          <mat-error *ngIf="datosForm.get('telefono')?.hasError('required')">
-            El teléfono es requerido
-          </mat-error>
-          <mat-error *ngIf="datosForm.get('telefono')?.hasError('pattern')">
-            El número de teléfono debe contener entre 10 y 12 dígitos
-          </mat-error>
-        </mat-form-field>
-  
-        <!-- Campo Contraseña -->
-        <mat-form-field appearance="fill">
-          <mat-label>Contraseña</mat-label>
-          <input matInput placeholder="Nueva contraseña" formControlName="password" type="password">
-          <mat-error *ngIf="datosForm.get('password')?.hasError('required')">
-            La contraseña es requerida
-          </mat-error>
-          <mat-error *ngIf="datosForm.get('password')?.hasError('minlength')">
-            La contraseña debe tener al menos 6 caracteres
-          </mat-error>
-        </mat-form-field>
-  
-        <!-- Confirmar Contraseña -->
-        <mat-form-field appearance="fill">
-          <mat-label>Confirmar Contraseña</mat-label>
-          <input matInput placeholder="Confirme su contraseña" formControlName="confirmPassword" type="password">
-          <mat-error *ngIf="datosForm.get('confirmPassword')?.hasError('required')">
-            La confirmación de la contraseña es requerida
-          </mat-error>
-          <mat-error *ngIf="datosForm.get('confirmPassword')?.hasError('passwordMismatch')">
-            Las contraseñas no coinciden
-          </mat-error>
-        </mat-form-field>
-  
-        <!-- Botón para guardar los cambios -->
-        <button mat-raised-button color="primary" type="submit" [disabled]="datosForm.invalid">Guardar Cambios</button>
-        <button mat-button (click)="cancelarEdicion()">Cancelar</button>
-      </form>
-    </mat-dialog-content>
-  </div>
-  
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Mis Datos Personales</mat-card-title>
+      <mat-card-subtitle>{{ paciente.nombre }} {{ paciente.apellido }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p><strong>Email:</strong> {{ datosForm.get('email')?.value || paciente.email }}</p>
+      <p><strong>Teléfono:</strong> {{ datosForm.get('telefono')?.value || paciente.telefono }}</p>
+      <p><strong>DNI:</strong> {{ paciente.dni }}</p>
+      <p><strong>Fecha de Nacimiento:</strong> {{ paciente.fecha_nacimiento | date: 'dd/MM/yyyy' }}</p>
+      <p><strong>Contraseña:</strong>
+        <span *ngIf="!showPassword">{{ '••••••••' }}</span>
+        <span *ngIf="showPassword">{{ datosForm.get('password')?.value || paciente.password }}</span>
+        <button mat-icon-button (click)="togglePasswordVisibility()">
+          <mat-icon class="eye-button">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </p>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="editarDatos()">Cambiar Mis Datos</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-dialog-content *ngIf="isEditing">
+    <h3><strong>Editar Datos</strong></h3>
+    <form [formGroup]="datosForm" (ngSubmit)="guardarCambios()">
+
+      <!-- Campo Email -->
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="Correo electrónico" formControlName="email" type="email">
+        <mat-error *ngIf="datosForm.get('email')?.hasError('required')">
+          El correo es requerido
+        </mat-error>
+        <mat-error *ngIf="datosForm.get('email')?.hasError('email')">
+          Formato de correo inválido
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Campo Teléfono -->
+      <mat-form-field appearance="fill">
+        <mat-label>Teléfono</mat-label>
+        <input matInput placeholder="Número de teléfono" formControlName="telefono" type="tel">
+        <mat-error *ngIf="datosForm.get('telefono')?.hasError('required')">
+          El teléfono es requerido
+        </mat-error>
+        <mat-error *ngIf="datosForm.get('telefono')?.hasError('pattern')">
+          El número de teléfono debe contener entre 10 y 12 dígitos
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Campo Contraseña -->
+      <mat-form-field appearance="fill">
+        <mat-label>Contraseña</mat-label>
+        <input matInput placeholder="Nueva contraseña" formControlName="password" type="password">
+        <mat-error *ngIf="datosForm.get('password')?.hasError('required')">
+          La contraseña es requerida
+        </mat-error>
+        <mat-error *ngIf="datosForm.get('password')?.hasError('minlength')">
+          La contraseña debe tener al menos 6 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Confirmar Contraseña -->
+      <mat-form-field appearance="fill">
+        <mat-label>Confirmar Contraseña</mat-label>
+        <input matInput placeholder="Confirme su contraseña" formControlName="confirmPassword" type="password">
+        <mat-error *ngIf="datosForm.get('confirmPassword')?.hasError('required')">
+          La confirmación de la contraseña es requerida
+        </mat-error>
+        <mat-error *ngIf="datosForm.get('confirmPassword')?.hasError('passwordMismatch')">
+          Las contraseñas no coinciden
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Botón para guardar los cambios -->
+      <button mat-raised-button color="primary" type="submit" [disabled]="datosForm.invalid">Guardar Cambios</button>
+      <button mat-button (click)="cancelarEdicion()">Cancelar</button>
+    </form>
+  </mat-dialog-content>
+</div>

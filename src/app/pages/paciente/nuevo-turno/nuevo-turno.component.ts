@@ -38,11 +38,17 @@ export class NuevoTurnoComponent implements OnInit {
     this.cargarCoberturas();
     this.cargarEspecialidades();
     this.obtenerIdPaciente();
+    this.obtenerCoberturaUsuario(); // Obtener la cobertura del usuario
   }
 
   obtenerIdPaciente() {
     const datosUsuario = JSON.parse(localStorage.getItem('datosUsuario') || '{}');
     this.id_paciente = datosUsuario.id || 0;
+  }
+
+  obtenerCoberturaUsuario() {
+    const idCobertura = localStorage.getItem('id_cobertura');
+    this.cobertura = idCobertura ? parseInt(idCobertura, 10) : 0; // Asigna la cobertura del usuario
   }
 
   cargarCoberturas() {
@@ -65,6 +71,11 @@ export class NuevoTurnoComponent implements OnInit {
     });
   }
 
+  getCoberturaNombre(): string {
+    const cobertura = this.coberturas.find(c => c.id === this.cobertura);
+    return cobertura ? cobertura.nombre : '';
+  }
+
   onEspecialidadChange() {
     const id_especialidad = this.especialidad;
     this.especialidadService.obtenerMedicoPorEspecialidad(id_especialidad).subscribe(response => {
@@ -79,13 +90,31 @@ export class NuevoTurnoComponent implements OnInit {
   onFechaChange() {
     const id_medico = this.profesional;
     const fechaSeleccionada = new Date(this.fecha).toISOString().split('T')[0]; // Format the selected date to YYYY-MM-DD
+  
+    // Obtener la agenda del médico
     this.turnoService.obtenerAgenda(id_medico).subscribe(response => {
       console.log('Backend Response:', response); // Add this line to check the backend response
       if (response.codigo === 200) {
-        this.horariosDisponibles = response.payload
-          .filter((agenda: any) => new Date(agenda.fecha).toISOString().split('T')[0] === fechaSeleccionada)
-          .map((agenda: any) => agenda.hora_entrada);
-        console.log('Horarios Disponibles:', this.horariosDisponibles); // Check the mapped horarios
+        const agenda = response.payload.filter((agenda: any) => new Date(agenda.fecha).toISOString().split('T')[0] === fechaSeleccionada);
+        const horariosDisponibles = agenda.map((agenda: any) => agenda.hora_entrada);
+  
+        // Obtener los turnos reservados para la fecha seleccionada usando obtenerTurnosMedico
+        this.turnoService.obtenerTurnosMedico(id_medico, fechaSeleccionada).subscribe(turnosResponse => {
+          if (turnosResponse.codigo === 200) {
+            const turnosReservados = turnosResponse.payload.map((turno: any) => turno.hora);
+  
+            // Filtrar los horarios disponibles para excluir los horarios ya reservados
+            this.horariosDisponibles = horariosDisponibles.filter((hora: string) => !turnosReservados.includes(hora));
+            console.log('Horarios Disponibles:', this.horariosDisponibles); // Check the filtered horarios
+  
+            // Mostrar mensaje si no hay horarios disponibles
+            if (this.horariosDisponibles.length === 0) {
+              alert('El médico no tiene horarios disponibles o no trabaja ese día');
+            }
+          } else {
+            console.error(turnosResponse.mensaje);
+          }
+        });
       } else {
         console.error(response.mensaje);
       }

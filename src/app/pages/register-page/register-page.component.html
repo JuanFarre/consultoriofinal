@@ -1,23 +1,4 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- <h2>Registrarse</h2>
+<h2>Registrarse</h2>
 <form [formGroup]="registroForm" (ngSubmit)="registrarUsuario()">
   <div class="name-fields">
     <mat-form-field appearance="outline">
@@ -39,25 +20,29 @@
       <input matInput type="password" formControlName="password" required />
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Confirmar contraseña</mat-label>
+      <mat-label>Confirmar Contraseña</mat-label>
       <input matInput type="password" formControlName="confirmPassword" required />
     </mat-form-field>
   </div>
   <mat-form-field appearance="outline">
     <mat-label>DNI</mat-label>
-    <input matInput type="number" formControlName="dni" required />
+    <input matInput formControlName="dni" required />
   </mat-form-field>
   <mat-form-field appearance="outline">
-    <mat-label>Fecha de nacimiento</mat-label>
-    <input matInput type="date" formControlName="fecha_nacimiento" required />
+    <mat-label>Fecha de Nacimiento</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento" required />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
   <mat-form-field appearance="outline">
-    <mat-label>Teléfono de contacto</mat-label>
-    <input matInput type="tel" formControlName="telefono" />
+    <mat-label>Teléfono</mat-label>
+    <input matInput formControlName="telefono" />
   </mat-form-field>
-  <div class="buttons">
-    <button mat-button type="button" mat-dialog-close>Cancelar</button>
-    <!-- Botón Registrarse, deshabilitado mientras el formulario se esté enviando -->
-    <button mat-raised-button color="primary" type="submit" [disabled]="!registroForm.valid || isSubmitting">Registrarse</button>
-  </div>
+  <mat-form-field appearance="outline">
+    <mat-label>Seleccione su Cobertura Médica</mat-label>
+    <mat-select formControlName="id_cobertura" required>
+      <mat-option *ngFor="let cobertura of coberturas" [value]="cobertura.id">{{ cobertura.nombre }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">Registrarse</button>
 </form>

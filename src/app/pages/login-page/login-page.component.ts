@@ -22,15 +22,12 @@ export class LoginPageComponent {
   login() {
     if (this.usuario && this.password) {
       this.authService.login(this.usuario, this.password).subscribe(
-        (response: LoginResponse) => {
+        (response: any) => {
           console.log('Respuesta del backend:', response); // Añadir log para verificar la respuesta
           if (response.codigo === 200) {
             console.log('Login exitoso', response);
             if (response.jwt) {
               localStorage.setItem('token', response.jwt);
-            } else {
-              console.error('Token is undefined');
-              alert('Token is undefined');
             }
             if (response.payload && response.payload.length > 0) {
               const user = response.payload[0];

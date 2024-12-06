@@ -1,96 +1,51 @@
+.container {
+  padding: 20px;
+}
 
-.mat-dialog-content {
-    padding: 20px;
-    background-color: #f9f9f9; 
-    border-radius: 8px; 
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
-  }
-  
-  
-  mat-form-field {
-    width: 100%; 
-    margin-bottom: 1rem; 
-  }
-  
-  
-  mat-error {
-    font-size: 0.875rem; 
-    color: #d32f2f; 
-  }
-  
+mat-card {
+  margin-bottom: 20px;
+}
 
-  .buttons {
-    display: flex;
-    justify-content: space-between; 
-    margin-top: 1rem; 
-  }
-  
-  
-  button {
-    font-family: 'Roboto', sans-serif;
-    border: none; 
-    padding: 10px 15px; 
-    cursor: pointer; 
-    transition: background-color 0.3s ease; 
-    width: 25%; 
-    border-radius: 4px; 
-  }
-  
-  
-  button[mat-button] {
-    background-color: #ffffff;
-    color: #70bd7d; 
-    border: 1px solid #70bd7d; 
-  }
-  
-  
-  button[mat-button]:hover {
-    background-color: #e6e6e6; 
-  }
-  
-  
-  button[mat-raised-button] {
-    background-color: #70bd7d; 
-    color: #ffffff; 
-  }
-  
-  
-  button[mat-raised-button]:hover {
-    background-color: #60a869;
-  }
-  
- 
-  .show-password {
-    cursor: pointer; 
-  }
-  
-  
-  .card {
-    padding: 20px; 
-    background-color: #ffffff; 
-    border-radius: 8px; 
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
-    margin-bottom: 20px; 
-  }
-  
-  .eye-button {
-    width: 30px; 
-    height: 30px; 
-    padding: 0; 
-    min-width: 0; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    border: none; 
-    background-color: transparent;
-    cursor: pointer; 
-  }
-  
-  
-  .mat-icon {
-    font-size: 20px; 
-  }
-  button[mat-icon-button]{
-  width: 60px;
-  margin-left: 20px;
-  }
+.eye-button {
+  vertical-align: middle;
+}
+
+mat-dialog-content {
+  margin-top: 20px;
+}
+
+button {
+  margin-right: 10px;
+}
+
+button.mat-raised-button {
+  background-color: #4caf50; /* Green color */
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button.mat-raised-button:hover {
+  background-color: #388e3c; /* Darker green on hover */
+  transform: scale(1.05);
+}
+
+button.mat-button {
+  background-color: #f44336; /* Red color */
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button.mat-button:hover {
+  background-color: #d32f2f; /* Darker red on hover */
+  transform: scale(1.05);
+}

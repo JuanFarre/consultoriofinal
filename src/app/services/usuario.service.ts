@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Usuario } from '../interfaces/usuario';
 
@@ -15,15 +15,19 @@ export class UsuarioService {
     return this.http.get<Usuario[]>(`${this.apiUrl}/obtenerUsuarios`);
   }
 
-  obtenerUsuario(id: number): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.apiUrl}/obtenerUsuario/${id}`);
+  obtenerUsuario(id: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.apiUrl}/obtenerUsuario/${id}`, { headers });
   }
 
   crearUsuario(usuario: Usuario): Observable<any> {
     return this.http.post(`${this.apiUrl}/crearUsuario`, usuario);
   }
 
-  actualizarUsuario(id: number, usuario: Usuario): Observable<any> {
-    return this.http.put(`${this.apiUrl}/actualizarUsuario/${id}`, usuario);
+  actualizarUsuario(id: number, usuario: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put(`${this.apiUrl}/actualizarUsuario/${id}`, usuario, { headers });
   }
 }
