@@ -45,6 +45,7 @@ export class GestionAgendaComponent implements OnInit {
             fecha: agenda.fecha.split('T')[0], // Formatear la fecha para que coincida con el formato YYYY-MM-DD
             rango: `${agenda.hora_entrada} - ${agenda.hora_salida}`
           }));
+          console.log(this.horarios); // Verifica que los horarios se carguen correctamente
         } else {
           console.error('Error al obtener la agenda:', response.mensaje);
         }
@@ -56,10 +57,14 @@ export class GestionAgendaComponent implements OnInit {
   }
 
   cargarEspecialidades(): void {
-    this.especialidadService.obtenerEspecialidades().subscribe(
+    this.especialidadService.obtenerEspecialidadesMedico(this.id_medico).subscribe(
       response => {
         if (response.codigo === 200) {
           this.especialidades = response.payload;
+          console.log(this.especialidades); // Verifica que las especialidades se carguen correctamente
+          if (this.especialidades.length > 0) {
+            this.agendaForm.patchValue({ especialidad: this.especialidades[0].id_especialidad });
+          }
         } else {
           console.error('Error al obtener las especialidades:', response.mensaje);
         }
@@ -92,7 +97,7 @@ export class GestionAgendaComponent implements OnInit {
           if (response.codigo === 200) {
             this.horarios.push({ fecha: this.selectedDate, rango: `${horaInicio} - ${horaFin}` });
             this.agendaForm.reset();
-            this.agendaForm.patchValue({ fecha: this.selectedDate });
+            this.agendaForm.patchValue({ fecha: this.selectedDate, especialidad: this.especialidades[0].id_especialidad });
           } else {
             console.error('Error al crear la agenda:', response.mensaje);
           }
@@ -105,7 +110,10 @@ export class GestionAgendaComponent implements OnInit {
   }
 
   obtenerHorariosPorFecha(fecha: string): { fecha: string; rango: string }[] {
-    return this.horarios.filter(horario => horario.fecha === fecha);
+    const formattedDate = new Date(fecha).toISOString().split('T')[0];
+    const filteredHorarios = this.horarios.filter(horario => horario.fecha === formattedDate);
+    console.log(`Horarios para la fecha ${formattedDate}:`, filteredHorarios);
+    return filteredHorarios;
   }
 
   volver(): void {

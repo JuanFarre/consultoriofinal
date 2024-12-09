@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { Turno } from 'src/app/interfaces/turno';
 import { TurnoService } from 'src/app/services/turno.service';
-import { TurnoNotasDialogComponent } from './turno-notas-dialog/turno-notas-dialog.component';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,23 +8,45 @@ import { Router } from '@angular/router';
   styleUrls: ['./turnos-programados.component.css']
 })
 export class TurnosProgramadosComponent implements OnInit {
+  fechaSeleccionada: Date | null = null;
+  turnos: any[] = [];
+  turnosFiltrados: any[] = [];
 
-  turnos: Turno[] = []; // lista de turnos
-  turnosFiltrados: Turno[] = [];
-  fechaSeleccionada: Date = new Date(); // fecha actual
-
-  constructor(private router: Router ,private turnoService: TurnoService, public dialog: MatDialog) {}
+  constructor(
+    private turnoService: TurnoService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.cargarTurnos(); 
+    // No cargar turnos inicialmente, ya que fechaSeleccionada es null
   }
+
   volver(): void {
     this.router.navigate(['/medico']);
   }
 
+  seleccionarFecha(event: any): void {
+    this.fechaSeleccionada = event.value;
+    this.cargarTurnos();
+  }
+
   cargarTurnos() {
+    if (!this.fechaSeleccionada) {
+      console.error('Fecha no seleccionada');
+      return;
+    }
+
     const fechaSeleccionadaString = this.fechaSeleccionada.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-    this.turnoService.obtenerTurnosMedico(1, fechaSeleccionadaString).subscribe(response => {
+    const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
+    const body = { id_medico: 1, fecha: fechaSeleccionadaString };
+
+    if (!token) {
+      console.error('Token no encontrado');
+      return;
+    }
+
+    console.log('Request Body:', body); // Verificar el cuerpo de la solicitud
+    this.turnoService.obtenerTurnoMedico(body, token).subscribe(response => {
       console.log('API Response:', response); // Add this line to check the API response
       if (response.codigo === 200) {
         this.turnos = response.payload.map((turno: any) => ({
@@ -42,38 +61,27 @@ export class TurnosProgramadosComponent implements OnInit {
       } else {
         console.error(response.mensaje);
       }
+    }, error => {
+      console.error('Error al obtener los turnos:', error);
     });
   }
 
   filtrarTurnos() {
-    const fechaSeleccionadaString = this.fechaSeleccionada.toISOString().split('T')[0]; // Formato YYYY-MM-DD
     this.turnosFiltrados = this.turnos;
-    this.turnosFiltrados = this.ordenarTurnos(this.turnosFiltrados);
-  }
-
-  seleccionarFecha(event: any) {
-    this.fechaSeleccionada = new Date(event.value);
-    this.cargarTurnos();
-  }
-
-  mostrarNotasTurno(turno: Turno) {
-    this.dialog.open(TurnoNotasDialogComponent, {
-      data: { notas: turno.nota }
-    });
-  }
-
-  ordenarTurnos(turnos: Turno[]): Turno[] {
-    return turnos.sort((a, b) => new Date(`1970-01-01T${a.hora}:00`).getTime() - new Date(`1970-01-01T${b.hora}:00`).getTime());
   }
 
   calcularEdad(fechaNacimiento: string): number {
-    const today = new Date();
-    const birthDate = new Date(fechaNacimiento);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDifference = today.getMonth() - birthDate.getMonth();
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+      edad--;
     }
-    return age;
+    return edad;
+  }
+
+  mostrarNotasTurno(turno: any): void {
+    alert(`Notas del turno: ${turno.nota}`);
   }
 }

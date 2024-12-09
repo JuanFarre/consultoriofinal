@@ -42,6 +42,7 @@ import { TurnoConfirmadoDialogComponent } from './pages/paciente/nuevo-turno/tur
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { NotaComponent } from './pages/operador/turnos-programados-operador/nota/nota.component';
 
 registerLocaleData(localeEs, 'es');
 
@@ -69,7 +70,8 @@ registerLocaleData(localeEs, 'es');
     EditarAgendaModalComponent,
     TurnosDialogComponent,
     TurnoNotasDialogComponent,
-    TurnoConfirmadoDialogComponent
+    TurnoConfirmadoDialogComponent,
+    NotaComponent
   ],
   imports: [
     BrowserModule,

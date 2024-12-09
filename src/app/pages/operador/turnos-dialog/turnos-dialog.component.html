@@ -1,22 +1,28 @@
-<h2 mat-dialog-title>Turnos Confirmados</h2>
-<mat-dialog-content>
-  <table>
-    <thead>
-      <tr>
-        <th>Fecha</th>
-        <th>Hora</th>
-        <th>Notas</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let turno of data.turnos">
-        <td>{{ turno.fecha }}</td>
-        <td>{{ turno.hora }}</td>
-        <td>{{ turno.nota }}</td>
-      </tr>
-    </tbody>
-  </table>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button (click)="close()">Cerrar</button>
-</mat-dialog-actions>
+<h2>Turnos para {{ medico.nombre }} {{ medico.apellido }} el {{ fecha | date: 'dd/MM/yyyy' }}</h2>
+<table mat-table [dataSource]="turnos" class="mat-elevation-z8">
+  <ng-container matColumnDef="nombre_paciente">
+    <th mat-header-cell *matHeaderCellDef> Paciente </th>
+    <td mat-cell *matCellDef="let turno"> {{ turno.nombre_paciente }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="hora">
+    <th mat-header-cell *matHeaderCellDef> Hora </th>
+    <td mat-cell *matCellDef="let turno"> {{ turno.hora }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nota">
+    <th mat-header-cell *matHeaderCellDef> Nota </th>
+    <td mat-cell *matCellDef="let turno"> {{ turno.nota }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="cobertura">
+    <th mat-header-cell *matHeaderCellDef> Cobertura </th>
+    <td mat-cell *matCellDef="let turno"> {{ turno.cobertura }} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="['nombre_paciente', 'hora', 'nota', 'cobertura']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['nombre_paciente', 'hora', 'nota', 'cobertura'];"></tr>
+</table>
+<div class="button-group">
+  <button mat-button (click)="cerrar()">Cerrar</button>
+</div>

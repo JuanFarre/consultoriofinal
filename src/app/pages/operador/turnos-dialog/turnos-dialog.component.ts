@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Turno } from 'src/app/interfaces/turno'; 
 
 @Component({
   selector: 'app-turnos-dialog',
@@ -8,13 +7,21 @@ import { Turno } from 'src/app/interfaces/turno';
   styleUrls: ['./turnos-dialog.component.css']
 })
 export class TurnosDialogComponent {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { turnos: Turno[] }, 
-    private dialogRef: MatDialogRef<TurnosDialogComponent> 
-  ) {}
+  turnos: any[];
+  medico: any;
+  fecha: string;
 
-  
-  close(): void {
-    this.dialogRef.close(); 
+  constructor(
+    public dialogRef: MatDialogRef<TurnosDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.turnos = data.turnos;
+    this.medico = data.medico;
+    this.fecha = data.fecha;
+    console.log('Datos recibidos en el diálogo:', this.turnos, this.medico, this.fecha); // Verifica los datos recibidos
+  }
+
+  cerrar(): void {
+    this.dialogRef.close();
   }
 }

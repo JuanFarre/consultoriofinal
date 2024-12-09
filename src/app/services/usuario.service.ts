@@ -30,4 +30,10 @@ export class UsuarioService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.put(`${this.apiUrl}/actualizarUsuario/${id}`, usuario, { headers });
   }
+
+  obtenerMedicos(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.apiUrl}/obtenerUsuarios?rol=medico`);
+  }
+
+
 }
