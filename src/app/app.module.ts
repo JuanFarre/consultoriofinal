@@ -43,6 +43,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { NotaComponent } from './pages/operador/turnos-programados-operador/nota/nota.component';
+import { MatButtonModule } from '@angular/material/button'; // Importar MatButtonModule
 
 registerLocaleData(localeEs, 'es');
 
@@ -91,7 +92,8 @@ registerLocaleData(localeEs, 'es');
     MatIconModule,
     MatTableModule,
     MatSelectModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatButtonModule // Asegúrate de importar MatButtonModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' }

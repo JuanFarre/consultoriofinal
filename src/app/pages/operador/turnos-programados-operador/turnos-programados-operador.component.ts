@@ -95,9 +95,9 @@ export class TurnosProgramadosOperadorComponent implements OnInit {
   editarAgenda(medico: any): void {
     const dialogRef = this.dialog.open(EditarAgendaModalComponent, {
       width: '400px',
-      data: { medico: medico }
+      data: { medico: medico, fecha: this.fechaSeleccionada }
     });
-
+  
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log(`Agenda editada para: ${medico.nombre}`, result);

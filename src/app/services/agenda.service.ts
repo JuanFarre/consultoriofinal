@@ -31,8 +31,8 @@ export class AgendaService {
   modificarAgenda(id: string, agenda: any): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
-    return this.http.put<any>(`${this.apiUrl}/agenda/${id}`, agenda, { headers });
+    return this.http.put<any>(`${this.apiUrl}/modificarAgenda/${id}`, agenda, { headers });
   }
 }

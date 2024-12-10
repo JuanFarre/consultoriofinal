@@ -1,37 +1,37 @@
 <body>
-    <h2>Turnos Programados</h2>
-    <div class="filtro-fecha">
-        <label for="fecha">Fecha:</label>
-        <input type="date" id="fecha" [value]="fechaSeleccionada" (change)="cambiarFecha($event)">
-    </div>
-    <div class="tabla-medicos" *ngFor="let especialidad of medicosPorEspecialidad">
-        <h3>{{ especialidad.especialidad }}</h3>
-        <table mat-table [dataSource]="especialidad.medicos" class="mat-elevation-z8">
-            <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef> Nombre del Médico </th>
-                <td mat-cell *matCellDef="let medico"> {{medico.nombre}} {{medico.apellido}} </td>
-            </ng-container>
-            
-            <ng-container matColumnDef="especialidad">
-                <th mat-header-cell *matHeaderCellDef> Especialidad </th>
-                <td mat-cell *matCellDef="let medico"> {{especialidad.especialidad}} </td>
-            </ng-container>
-            
-            <ng-container matColumnDef="horario">
-                <th mat-header-cell *matHeaderCellDef> Horario de Atención </th>
-                <td mat-cell *matCellDef="let medico"> {{medico.horarioAtencion}} </td>
-            </ng-container>
-            
-            <ng-container matColumnDef="acciones">
-                <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                <td mat-cell *matCellDef="let medico">
-                    <mat-icon class="mat-icon-size" (click)="editarAgenda(medico)">edit</mat-icon>
-                    <mat-icon class="mat-icon-size" (click)="verTurnos(medico)">visibility</mat-icon>
-                </td>
-            </ng-container>
-            
-            <tr mat-header-row *matHeaderRowDef="['nombre', 'especialidad', 'horario', 'acciones']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['nombre', 'especialidad', 'horario', 'acciones'];"></tr>
-        </table>
-    </div>
+  <h2>Turnos Programados</h2>
+  <div class="filtro-fecha">
+      <label for="fecha">Fecha:</label>
+      <input type="date" id="fecha" [value]="fechaSeleccionada" (change)="cambiarFecha($event)">
+  </div>
+  <div class="tabla-medicos" *ngFor="let especialidad of medicosPorEspecialidad">
+      <h3>{{ especialidad.especialidad }}</h3>
+      <table mat-table [dataSource]="especialidad.medicos" class="mat-elevation-z8">
+          <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef> Nombre del Médico </th>
+              <td mat-cell *matCellDef="let medico"> {{medico.nombre}} {{medico.apellido}} </td>
+          </ng-container>
+          
+          <ng-container matColumnDef="especialidad">
+              <th mat-header-cell *matHeaderCellDef> Especialidad </th>
+              <td mat-cell *matCellDef="let medico"> {{especialidad.especialidad}} </td>
+          </ng-container>
+          
+          <ng-container matColumnDef="horario">
+              <th mat-header-cell *matHeaderCellDef> Horario de Atención </th>
+              <td mat-cell *matCellDef="let medico"> {{medico.horarioAtencion}} </td>
+          </ng-container>
+          
+          <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef> Acciones </th>
+              <td mat-cell *matCellDef="let medico">
+                  <mat-icon class="mat-icon-size" (click)="editarAgenda(medico)">edit</mat-icon>
+                  <mat-icon class="mat-icon-size" (click)="verTurnos(medico)">visibility</mat-icon>
+              </td>
+          </ng-container>
+          
+          <tr mat-header-row *matHeaderRowDef="['nombre', 'especialidad', 'horario', 'acciones']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['nombre', 'especialidad', 'horario', 'acciones'];"></tr>
+      </table>
+  </div>
 </body>
