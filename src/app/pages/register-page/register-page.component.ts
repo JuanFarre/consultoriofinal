@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Optional } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -35,7 +35,7 @@ export class RegisterPageComponent implements OnInit {
       password: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required]],
       dni: ['', [Validators.required]],
-      fecha_nacimiento: ['', [Validators.required]],
+      fecha_nacimiento: ['', [Validators.required, this.noFechaFuturaValidator()]], // Aplica la validación personalizada
       telefono: [''],
       id_cobertura: ['', [Validators.required]]
     });
@@ -89,5 +89,14 @@ export class RegisterPageComponent implements OnInit {
 
   volver(): void {
     this.router.navigate(['/operador']);
+  }
+
+  // Función de validación personalizada para verificar que la fecha de nacimiento no sea futura
+  noFechaFuturaValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const fechaNacimiento = new Date(control.value);
+      const hoy = new Date();
+      return fechaNacimiento <= hoy ? null : { fechaFutura: true };
+    };
   }
 }

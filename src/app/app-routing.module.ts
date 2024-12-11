@@ -12,21 +12,22 @@ import { GestionAgendaComponent } from './pages/medico/gestion-agenda/gestion-ag
 import { OperadorComponent } from './pages/operador/operador.component';
 import { TurnosProgramadosOperadorComponent } from './pages/operador/turnos-programados-operador/turnos-programados-operador.component';
 import { RegistrarPacientesComponent } from './pages/operador/registrar-pacientes/registrar-pacientes.component';
+import { authGuard } from './services/auth.guard';
 
 const routes: Routes = [
   { path: 'welcome', component: WelcomePageComponent },
-  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
-  { path: 'pacientes', component: PacienteComponent },
-  { path: 'pacientes/nuevo-turno', component: NuevoTurnoComponent },
-  { path: 'pacientes/mis-turnos', component: MisTurnosComponent },
-  { path: 'pacientes/mis-datos', component: MisDatosComponent },
-  { path: 'admin', component: AdminComponent },
-  { path: 'medico', component: MedicoComponent },
-  { path: 'medico/turnos-programados', component: TurnosProgramadosComponent },
-  { path: 'medico/gestion-agenda', component: GestionAgendaComponent },
-  { path: 'operador', component: OperadorComponent },
-  { path: 'operador/turnos-programados-operador', component: TurnosProgramadosOperadorComponent },
-  { path: 'operador/registrar-pacientes', component: RegistrarPacientesComponent }
+  { path: '', redirectTo: 'welcome', pathMatch: 'full'},
+  { path: 'pacientes', component: PacienteComponent, canActivate: [authGuard] },
+  { path: 'pacientes/nuevo-turno', component: NuevoTurnoComponent, canActivate: [authGuard] },
+  { path: 'pacientes/mis-turnos', component: MisTurnosComponent, canActivate: [authGuard] },
+  { path: 'pacientes/mis-datos', component: MisDatosComponent, canActivate: [authGuard] },
+  { path: 'admin', component: AdminComponent,canActivate: [authGuard] },
+  { path: 'medico', component: MedicoComponent, canActivate: [authGuard] },
+  { path: 'medico/turnos-programados', component: TurnosProgramadosComponent , canActivate: [authGuard]},
+  { path: 'medico/gestion-agenda', component: GestionAgendaComponent, canActivate: [authGuard] },
+  { path: 'operador', component: OperadorComponent , canActivate: [authGuard]},
+  { path: 'operador/turnos-programados-operador', component: TurnosProgramadosOperadorComponent, canActivate: [authGuard] },
+  { path: 'operador/registrar-pacientes', component: RegistrarPacientesComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({

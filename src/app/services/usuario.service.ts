@@ -11,8 +11,10 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) { }
 
-  obtenerUsuarios(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(`${this.apiUrl}/obtenerUsuarios`);
+  obtenerUsuarios(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.apiUrl}/obtenerUsuarios`, { headers });
   }
 
   obtenerUsuario(id: number): Observable<any> {

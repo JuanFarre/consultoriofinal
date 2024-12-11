@@ -43,7 +43,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { NotaComponent } from './pages/operador/turnos-programados-operador/nota/nota.component';
-import { MatButtonModule } from '@angular/material/button'; // Importar MatButtonModule
+import { MatButtonModule } from '@angular/material/button';
+import { EditarUsuarioDialogComponent } from './pages/admin/editar-usuario-dialog/editar-usuario-dialog.component'; // Importar MatButtonModule
 
 registerLocaleData(localeEs, 'es');
 
@@ -72,7 +73,8 @@ registerLocaleData(localeEs, 'es');
     TurnosDialogComponent,
     TurnoNotasDialogComponent,
     TurnoConfirmadoDialogComponent,
-    NotaComponent
+    NotaComponent,
+    EditarUsuarioDialogComponent
   ],
   imports: [
     BrowserModule,

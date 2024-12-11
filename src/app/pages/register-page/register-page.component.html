@@ -30,22 +30,23 @@
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Fecha de Nacimiento</mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento" required />
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
+    <input matInput type="date" formControlName="fecha_nacimiento" required />
+    <mat-error *ngIf="registroForm.get('fecha_nacimiento')?.hasError('fechaFutura')">
+      La fecha de nacimiento no puede ser una fecha futura.
+    </mat-error>
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Teléfono</mat-label>
     <input matInput formControlName="telefono" />
   </mat-form-field>
   <mat-form-field appearance="outline">
-    <mat-label>Seleccione su Cobertura Médica</mat-label>
+    <mat-label>Cobertura</mat-label>
     <mat-select formControlName="id_cobertura" required>
-      <mat-option *ngFor="let cobertura of coberturas" [value]="cobertura.id">{{ cobertura.nombre }}</mat-option>
+      <mat-option *ngFor="let cobertura of coberturas" [value]="cobertura.id">
+        {{ cobertura.nombre }}
+      </mat-option>
     </mat-select>
   </mat-form-field>
-  <div class="actions">
-    <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">Registrarse</button>
-    <button *ngIf="mostrarBotonVolver" mat-raised-button color="accent" type="button" (click)="volver()">Volver</button>
-  </div>
+  <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">Registrarse</button>
+  <button mat-button type="button" *ngIf="mostrarBotonVolver" (click)="volver()">Volver</button>
 </form>

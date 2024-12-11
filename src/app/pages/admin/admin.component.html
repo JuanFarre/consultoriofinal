@@ -1,77 +1,113 @@
 <div class="admin-container">
-    <h2>Gestión de Usuarios</h2>
-    
-    <input type="text" placeholder="Filtrar por nombre, apellido o rol" (input)="filtrarUsuarios($event)" />
+  <h2>Gestión de Usuarios</h2>
   
-    <table>
-      <thead>
-        <tr>
-          <th>DNI</th>
-          <th>Apellido</th>
-          <th>Nombre</th>
-          <th>Fecha de Nacimiento</th>
-          <th>Rol</th>
-          <th>Email</th>
-          <th>Teléfono</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let usuario of filteredUsuarios">
-          <td>{{ usuario.dni }}</td>
-          <td>{{ usuario.apellido }}</td>
-          <td>{{ usuario.nombre }}</td>
-          <td>{{ usuario.fecha_nacimiento | date:'shortDate' }}</td>
-          <td>{{ usuario.rol }}</td>
-          <td>{{ usuario.email }}</td>
-          <td>{{ usuario.telefono }}</td>
-          <td>
-            <button (click)="editarUsuario(usuario)">Editar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <mat-form-field appearance="outline">
+    <mat-label>Filtrar por nombre, apellido o rol</mat-label>
+    <input matInput (input)="filtrarUsuarios($event)" placeholder="Filtrar por nombre, apellido o rol">
+  </mat-form-field>
   
-    <form [formGroup]="usuarioForm" (ngSubmit)="agregarUsuario()">
-      <h3>{{ isEditing ? 'Editar Usuario' : 'Agregar Usuario' }}</h3>
-      <div>
-        <label>DNI</label>
-        <input formControlName="dni" />
-      </div>
-      <div>
-        <label>Apellido</label>
-        <input formControlName="apellido" />
-      </div>
-      <div>
-        <label>Nombre</label>
-        <input formControlName="nombre" />
-      </div>
-      <div>
-        <label>Fecha de Nacimiento</label>
-        <input type="date" formControlName="fecha_nacimiento" />
-      </div>
-      <div>
-        <label>Rol</label>
-        <select formControlName="rol">
-          <option value="operador">Operador</option>
-          <option value="medico">Medico</option>
-          <option value="administrador">Administrador</option>
-        </select>
-      </div>
-      <div>
-        <label>Email</label>
-        <input formControlName="email" />
-      </div>
-      <div>
-        <label>Teléfono</label>
-        <input formControlName="telefono" />
-      </div>
-      <div>
-        <label>Contraseña</label>
-        <input type="password" formControlName="password" />
-      </div>
-      <button type="submit">{{ isEditing ? 'Actualizar' : 'Agregar' }}</button>
-      <button type="button" (click)="limpiarFormulario()">Cancelar</button>
-    </form>
-  </div>
+  <table mat-table [dataSource]="filteredUsuarios" class="mat-elevation-z8">
+    <ng-container matColumnDef="dni">
+      <th mat-header-cell *matHeaderCellDef> DNI </th>
+      <td mat-cell *matCellDef="let usuario"> {{usuario.dni}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="apellido">
+      <th mat-header-cell *matHeaderCellDef> Apellido </th>
+      <td mat-cell *matCellDef="let usuario"> {{usuario.apellido}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let usuario"> {{usuario.nombre}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fecha_nacimiento">
+      <th mat-header-cell *matHeaderCellDef> Fecha de Nacimiento </th>
+      <td mat-cell *matCellDef="let usuario"> {{usuario.fecha_nacimiento | date:'shortDate'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="rol">
+      <th mat-header-cell *matHeaderCellDef> Rol </th>
+      <td mat-cell *matCellDef="let usuario"> {{usuario.rol}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <td mat-cell *matCellDef="let usuario"> {{usuario.email}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="telefono">
+      <th mat-header-cell *matHeaderCellDef> Teléfono </th>
+      <td mat-cell *matCellDef="let usuario"> {{usuario.telefono}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cobertura">
+      <th mat-header-cell *matHeaderCellDef> Cobertura </th>
+      <td mat-cell *matCellDef="let usuario"> {{usuario.nombre_cobertura ? usuario.nombre_cobertura : 'No tiene'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let usuario">
+        <button mat-button (click)="editarUsuario(usuario)">Editar</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
   
+  <form [formGroup]="usuarioForm" (ngSubmit)="agregarUsuario()" class="usuario-form">
+    <h3>{{ isEditing ? 'Editar Usuario' : 'Agregar Usuario' }}</h3>
+    <mat-form-field appearance="outline">
+      <mat-label>DNI</mat-label>
+      <input matInput formControlName="dni">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Apellido</mat-label>
+      <input matInput formControlName="apellido">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Fecha de Nacimiento</mat-label>
+      <input matInput type="date" formControlName="fecha_nacimiento">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Rol</mat-label>
+      <mat-select formControlName="rol">
+        <mat-option value="operador">Operador</mat-option>
+        <mat-option value="medico">Medico</mat-option>
+        <mat-option value="admin">Admin</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Teléfono</mat-label>
+      <input matInput formControlName="telefono">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Contraseña</mat-label>
+      <input matInput type="password" formControlName="password">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Cobertura</mat-label>
+      <mat-select formControlName="id_cobertura">
+        <mat-option [value]="null">No tiene</mat-option>
+        <mat-option *ngFor="let cobertura of coberturas" [value]="cobertura.id">
+          {{ cobertura.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="form-buttons">
+      <button mat-raised-button color="primary" type="submit">{{ isEditing ? 'Actualizar' : 'Agregar' }}</button>
+      <button mat-button type="button" (click)="limpiarFormulario()">Cancelar</button>
+    </div>
+  </form>
+</div>

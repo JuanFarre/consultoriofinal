@@ -14,8 +14,12 @@ export class HeaderMainComponent implements OnInit {
   constructor(private router: Router, private authService: AuthService) { }
 
   ngOnInit() {
-    this.nombreUsuario = localStorage.getItem('username') || "";
-    this.tipoUsuario = localStorage.getItem('rol') || "";
+    const datosUsuario = localStorage.getItem('datosUsuario');
+    if (datosUsuario) {
+      const usuario = JSON.parse(datosUsuario);
+      this.nombreUsuario = usuario.nombre || "";
+      this.tipoUsuario = localStorage.getItem('rol') || "";
+    }
   }
 
   cerrarSesion() {
