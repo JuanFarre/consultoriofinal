@@ -2,20 +2,27 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centrar horizontalmente */
 }
 
 .usuario-form {
   display: flex;
   flex-direction: column;
+  width: 100%; /* Asegurarse de que el formulario ocupe todo el ancho del contenedor */
+  align-items: center; /* Centrar horizontalmente */
 }
 
 .usuario-form mat-form-field {
   margin-bottom: 15px;
+  width: 100%; /* Asegurarse de que los campos del formulario ocupen todo el ancho del formulario */
 }
 
 .form-buttons {
   display: flex;
   justify-content: space-between;
+  width: 100%; /* Asegurarse de que los botones ocupen todo el ancho del formulario */
 }
 
 table {

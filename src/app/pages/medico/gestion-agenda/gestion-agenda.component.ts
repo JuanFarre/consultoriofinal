@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AgendaService } from 'src/app/services/agenda.service';
 import { EspecialidadService } from 'src/app/services/especialidad.service';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-gestion-agenda',
   templateUrl: './gestion-agenda.component.html',
@@ -20,7 +20,8 @@ export class GestionAgendaComponent implements OnInit {
     private fb: FormBuilder,
     private agendaService: AgendaService,
     private especialidadService: EspecialidadService,
-    private router: Router
+    private router: Router,
+    private MatSnackBar: MatSnackBar
   ) {
     this.agendaForm = this.fb.group({
       fecha: [this.selectedDate],
@@ -80,9 +81,9 @@ export class GestionAgendaComponent implements OnInit {
       console.error('Formulario inválido');
       return;
     }
-
+  
     const { horaInicio, horaFin, especialidad } = this.agendaForm.value;
-
+  
     if (horaInicio && horaFin && especialidad) {
       const nuevaAgenda = {
         id_medico: this.id_medico,
@@ -91,13 +92,15 @@ export class GestionAgendaComponent implements OnInit {
         hora_entrada: horaInicio,
         hora_salida: horaFin
       };
-
+  
       this.agendaService.crearAgenda(nuevaAgenda).subscribe(
         response => {
           if (response.codigo === 200) {
             this.horarios.push({ fecha: this.selectedDate, rango: `${horaInicio} - ${horaFin}` });
             this.agendaForm.reset();
             this.agendaForm.patchValue({ fecha: this.selectedDate, especialidad: this.especialidades[0].id_especialidad });
+            this.MatSnackBar.open('Horario agendado con éxito', 'Cerrar', { duration: 3000 });
+            this.cargarHorarios(); // Actualiza la tabla de horarios disponibles
           } else {
             console.error('Error al crear la agenda:', response.mensaje);
           }
