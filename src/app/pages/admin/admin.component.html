@@ -100,14 +100,22 @@
       <mat-label>Cobertura</mat-label>
       <mat-select formControlName="id_cobertura">
         <mat-option [value]="null">No tiene</mat-option>
-        <mat-option *ngFor="let cobertura of coberturas" [value]="cobertura.id">
-          {{ cobertura.nombre }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <div class="form-buttons">
-      <button mat-raised-button color="primary" type="submit">{{ isEditing ? 'Actualizar' : 'Agregar' }}</button>
-      <button mat-button type="button" (click)="limpiarFormulario()">Cancelar</button>
-    </div>
-  </form>
+<mat-option *ngFor="let cobertura of coberturas" [value]="cobertura.id">
+  {{ cobertura.nombre }}
+</mat-option>
+</mat-select>
+</mat-form-field>
+<mat-form-field appearance="outline" *ngIf="usuarioForm.get('rol')?.value === 'medico'">
+  <mat-label>Especialidad</mat-label>
+  <mat-select formControlName="id_especialidad">
+    <mat-option *ngFor="let especialidad of especialidades" [value]="especialidad.id">
+      {{ especialidad.descripcion }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<div class="form-buttons">
+  <button mat-raised-button color="primary" type="submit">{{ isEditing ? 'Actualizar' : 'Agregar' }}</button>
+  <button mat-button type="button" (click)="limpiarFormulario()">Cancelar</button>
+</div>
+</form>
 </div>

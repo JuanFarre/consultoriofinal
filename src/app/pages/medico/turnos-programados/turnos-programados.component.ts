@@ -38,7 +38,9 @@ export class TurnosProgramadosComponent implements OnInit {
 
     const fechaSeleccionadaString = this.fechaSeleccionada.toISOString().split('T')[0]; // Formato YYYY-MM-DD
     const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
-    const body = { id_medico: 1, fecha: fechaSeleccionadaString };
+    const datosUsuario = JSON.parse(localStorage.getItem('datosUsuario') || '{}');
+    const id_medico = datosUsuario.id || 0; // Obtener el id del médico logueado
+    const body = { id_medico, fecha: fechaSeleccionadaString };
 
     if (!token) {
       console.error('Token no encontrado');

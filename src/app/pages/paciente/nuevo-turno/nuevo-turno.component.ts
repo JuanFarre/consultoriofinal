@@ -103,39 +103,31 @@ export class NuevoTurnoComponent implements OnInit {
           .filter((agenda: any) => new Date(agenda.fecha).toISOString().split('T')[0] === fechaSeleccionada && !agenda.ocupado)
           .map((agenda: any) => agenda.hora_entrada);
         console.log('Horarios Disponibles:', this.horariosDisponibles); // Check the mapped horarios
+  
+        // Filtrar horarios ocupados
+        this.verificarTurnoExistente(id_medico, fechaSeleccionada).then(turnosExistentes => {
+          this.horariosDisponibles = this.horariosDisponibles.filter(hora => {
+            return !turnosExistentes.some(turno => turno.hora === hora);
+          });
+        });
       } else {
         console.error(response.mensaje);
       }
     });
   }
 
-  obtenerAgenda(idMedico: number) {
-    this.agendaService.obtenerAgenda(idMedico.toString()).subscribe((response: any) => {
-      if (response.codigo === 200 && response.payload.length > 0) {
-        const fechaSeleccionada = new Date(this.fecha).toISOString().split('T')[0];
-        const agendaEncontrada = response.payload.find((agenda: any) => {
-          const fechaAgenda = new Date(agenda.fecha).toISOString().split('T')[0];
-          return fechaAgenda === fechaSeleccionada && agenda.hora_entrada === this.hora && !agenda.ocupado;
-        });
-  
-        if (agendaEncontrada) {
-          this.id_agenda = agendaEncontrada.id;
-        } else {
-          console.error('No se encontró una agenda disponible que coincida con la fecha y hora seleccionadas');
-          this.id_agenda = 0; // Reset id_agenda if no match is found
-        }
-      } else {
-        console.error('No se encontró agenda para el médico');
-        this.id_agenda = 0; // Reset id_agenda if no agenda is found
-      }
-    }, error => {
-      console.error('Error al obtener la agenda', error);
-      this.id_agenda = 0; // Reset id_agenda on error
-    });
-  }
-
-  onSubmit(form: any) {
+  async onSubmit(form: any) {
     if (form.valid) {
+      const turnosExistentes = await this.verificarTurnoExistente(this.profesional, this.fecha);
+      const turnoExistente = turnosExistentes.find((turno: any) => {
+        return turno.fecha === this.fecha && turno.hora === this.hora;
+      });
+
+      if (turnoExistente) {
+        alert('Ya existe un turno asignado en esta fecha y hora.');
+        return;
+      }
+
       this.obtenerAgenda(this.profesional); // Asegúrate de obtener la agenda antes de enviar el formulario
   
       // Espera un momento para que obtenerAgenda complete su ejecución
@@ -171,6 +163,49 @@ export class NuevoTurnoComponent implements OnInit {
       }, 1000); // Ajusta el tiempo de espera según sea necesario
     }
   }
+
+  obtenerAgenda(idMedico: number) {
+    this.agendaService.obtenerAgenda(idMedico.toString()).subscribe((response: any) => {
+      if (response.codigo === 200 && response.payload.length > 0) {
+        const fechaSeleccionada = new Date(this.fecha).toISOString().split('T')[0];
+        const agendaEncontrada = response.payload.find((agenda: any) => {
+          const fechaAgenda = new Date(agenda.fecha).toISOString().split('T')[0];
+          return fechaAgenda === fechaSeleccionada && agenda.hora_entrada === this.hora && !agenda.ocupado;
+        });
+  
+        if (agendaEncontrada) {
+          this.id_agenda = agendaEncontrada.id;
+        } else {
+          console.error('No se encontró una agenda disponible que coincida con la fecha y hora seleccionadas');
+          this.id_agenda = 0; // Reset id_agenda if no match is found
+        }
+      } else {
+        console.error('No se encontró agenda para el médico');
+        this.id_agenda = 0; // Reset id_agenda if no agenda is found
+      }
+    }, error => {
+      console.error('Error al obtener la agenda', error);
+      this.id_agenda = 0; // Reset id_agenda on error
+    });
+  }
+
+  verificarTurnoExistente(id_medico: number, fecha: string): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      const token = localStorage.getItem('token') || '';
+      this.turnoService.obtenerTurnoMedico({ id_medico, fecha }, token).subscribe(response => {
+        if (response.codigo === 200) {
+          resolve(response.payload);
+        } else {
+          console.error(response.mensaje);
+          resolve([]);
+        }
+      }, error => {
+        console.error('Error al verificar turno existente', error);
+        resolve([]);
+      });
+    });
+  }
+
   openDialog(): void {
     const dialogRef = this.dialog.open(TurnoConfirmadoDialogComponent, {
       data: {

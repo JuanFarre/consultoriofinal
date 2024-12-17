@@ -17,6 +17,7 @@
           <mat-icon class="eye-button">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
       </p>
+      <p><strong>Cobertura:</strong> {{ paciente.nombre_cobertura }}</p>
     </mat-card-content>
 
     <mat-card-actions>
@@ -71,8 +72,21 @@
         <mat-error *ngIf="datosForm.get('confirmPassword')?.hasError('required')">
           La confirmación de la contraseña es requerida
         </mat-error>
-        <mat-error *ngIf="datosForm.get('confirmPassword')?.hasError('passwordMismatch')">
-          Las contraseñas no coinciden
+        <mat-error *ngIf="datosForm.hasError('passwordMismatch') && datosForm.get('confirmPassword')?.touched">
+          Las contraseñas deben coincidir
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Campo Cobertura -->
+      <mat-form-field appearance="fill">
+        <mat-label>Cobertura</mat-label>
+        <mat-select formControlName="cobertura">
+          <mat-option *ngFor="let cobertura of coberturas" [value]="cobertura.id">
+            {{ cobertura.nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="datosForm.get('cobertura')?.hasError('required')">
+          La cobertura es requerida
         </mat-error>
       </mat-form-field>
 

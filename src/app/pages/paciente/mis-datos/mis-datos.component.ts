@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EspecialidadService } from 'src/app/services/especialidad.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { MatSnackBar } from '@angular/material/snack-bar'; // Importa MatSnackBar
 
 @Component({
   selector: 'app-mis-datos',
@@ -9,84 +9,111 @@ import { MatSnackBar } from '@angular/material/snack-bar'; // Importa MatSnackBa
   styleUrls: ['./mis-datos.component.css']
 })
 export class MisDatosComponent implements OnInit {
-  paciente: any = {};
   datosForm: FormGroup;
-  isEditing = false;
-  showPassword = false;
+  showPassword: boolean = false;
+  isEditing: boolean = false;
+  paciente: any = {};
+  coberturas: any[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private usuarioService: UsuarioService,
-    private snackBar: MatSnackBar // Inyecta MatSnackBar
+    private especialidadService: EspecialidadService,
+    private usuarioService: UsuarioService
   ) {
     this.datosForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      telefono: ['', [Validators.required, Validators.pattern('^[0-9]{10,12}$')]], // Entre 10 y 12 dígitos
+      telefono: ['', [Validators.required, Validators.pattern(/^\d{10,12}$/)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]]
-    });
+      confirmPassword: ['', Validators.required],
+      cobertura: ['', Validators.required]
+    }, { validator: this.passwordMatchValidator });
   }
 
   ngOnInit(): void {
     this.cargarDatosPaciente();
+    this.cargarCoberturas();
   }
 
-  cargarDatosPaciente() {
+  cargarDatosPaciente(): void {
     const datosUsuario = JSON.parse(localStorage.getItem('datosUsuario') || '{}');
-    const idPaciente = datosUsuario.id || 0;
+    const idCobertura = localStorage.getItem('id_cobertura');
+    const nombreCobertura = datosUsuario.nombre_cobertura || 'Sin cobertura';
+    this.paciente = { ...datosUsuario, id_cobertura: idCobertura, nombre_cobertura: nombreCobertura };
+    this.datosForm.patchValue({
+      email: this.paciente.email,
+      telefono: this.paciente.telefono,
+      cobertura: idCobertura
+    });
+  }
 
-    this.usuarioService.obtenerUsuario(idPaciente).subscribe(response => {
+  cargarCoberturas(): void {
+    this.especialidadService.obtenerCoberturas().subscribe(response => {
       if (response.codigo === 200) {
-        this.paciente = response.payload[0];
-        this.datosForm.patchValue({
-          email: this.paciente.email,
-          telefono: this.paciente.telefono
-        });
+        this.coberturas = response.payload;
       } else {
-        console.error(response.mensaje);
+        console.error('Error al cargar coberturas:', response.mensaje);
       }
     });
   }
 
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
-  }
-
-  editarDatos() {
+  editarDatos(): void {
     this.isEditing = true;
   }
 
-  guardarCambios() {
+  guardarCambios(): void {
     if (this.datosForm.valid) {
-      if (this.datosForm.value.password !== this.datosForm.value.confirmPassword) {
-        this.datosForm.get('confirmPassword')?.setErrors({ passwordMismatch: true });
+      if (this.datosForm.hasError('passwordMismatch')) {
+        alert('Las contraseñas no coinciden');
         return;
       }
 
-      const updatedData = {
+      const datosActualizados = {
         email: this.datosForm.value.email,
         telefono: this.datosForm.value.telefono,
-        password: this.datosForm.value.password
+        password: this.datosForm.value.password,
+        id_cobertura: this.datosForm.value.cobertura
       };
 
-      this.usuarioService.actualizarUsuario(this.paciente.id, updatedData).subscribe(response => {
-        if (response.codigo === 200) {
-          this.snackBar.open('Cambios guardados con éxito', 'Aceptar', {
-            duration: 3000
-          });
+      // Llama al servicio para guardar los datos actualizados en la base de datos
+      this.usuarioService.actualizarUsuario(this.paciente.id, datosActualizados).subscribe(
+        response => {
+          console.log('Datos actualizados en la base de datos:', response);
+
+          // Actualiza localStorage con los nuevos datos
+          const datosUsuarioActualizados = {
+            ...this.paciente,
+            email: datosActualizados.email,
+            telefono: datosActualizados.telefono,
+            id_cobertura: datosActualizados.id_cobertura,
+            nombre_cobertura: this.coberturas.find(c => c.id === datosActualizados.id_cobertura)?.nombre || 'Sin cobertura'
+          };
+          localStorage.setItem('datosUsuario', JSON.stringify(datosUsuarioActualizados));
+          localStorage.setItem('id_cobertura', datosActualizados.id_cobertura);
+
           this.isEditing = false;
           this.cargarDatosPaciente();
-        } else {
-          console.error(response.mensaje);
+        },
+        error => {
+          console.error('Error al actualizar los datos en la base de datos:', error);
+          alert('Ocurrió un error al actualizar los datos');
         }
-      });
+      );
     } else {
       alert('Hay errores en el formulario');
     }
   }
 
-  cancelarEdicion() {
+  cancelarEdicion(): void {
     this.isEditing = false;
     this.cargarDatosPaciente();
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    return form.get('password')?.value === form.get('confirmPassword')?.value
+      ? null : { 'passwordMismatch': true };
   }
 }

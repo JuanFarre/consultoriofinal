@@ -11,29 +11,14 @@
     <button mat-raised-button class="volver-button" (click)="volver()">Volver</button>
   </div>
 
-  <table mat-table [dataSource]="turnosFiltrados" class="mat-elevation-z8">
-    <ng-container matColumnDef="hora">
-      <th mat-header-cell *matHeaderCellDef> Hora </th>
-      <td mat-cell *matCellDef="let turno" (click)="mostrarNotasTurno(turno)"> {{ turno.hora }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="nombre">
-      <th mat-header-cell *matHeaderCellDef> Nombre </th>
-      <td mat-cell *matCellDef="let turno" (click)="mostrarNotasTurno(turno)"> {{ turno.nombre }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="apellido">
-      <th mat-header-cell *matHeaderCellDef> Apellido </th>
-      <td mat-cell *matCellDef="let turno" (click)="mostrarNotasTurno(turno)"> {{ turno.apellido }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="edad">
-      <th mat-header-cell *matHeaderCellDef> Edad </th>
-      <td mat-cell *matCellDef="let turno" (click)="mostrarNotasTurno(turno)"> {{ turno.edad }} </td>
-    </ng-container>
-
-    <!-- filas de la tabla -->
-    <tr mat-header-row *matHeaderRowDef="['hora', 'nombre', 'apellido', 'edad']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['hora', 'nombre', 'apellido', 'edad'];"></tr>
-  </table>
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let turno of turnosFiltrados">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ turno.hora }} - {{ turno.nombre }} {{ turno.apellido }} ({{ turno.edad }} años)
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>{{ turno.nota }}</p>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>

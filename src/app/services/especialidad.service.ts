@@ -41,4 +41,11 @@ export class EspecialidadService {
     });
     return this.http.get<any>(`${this.apiUrl}/obtenerEspecialidadesMedico/${id_medico}`, { headers });
   }
+  crearMedicoEspecialidad(data: { id_medico: number, id_especialidad: number }): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+    return this.http.post<any>(`${this.apiUrl}/crearMedicoEspecialidad`, data, { headers });
+  }
 }

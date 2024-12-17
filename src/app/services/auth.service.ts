@@ -42,10 +42,11 @@ export class AuthService {
       tap(response => {
         if (response.codigo === 200 && response.payload.length > 0) {
           const usuario = response.payload[0];
-          if (usuario.id_cobertura !== undefined) {
+          if (usuario.id_cobertura !== undefined && usuario.id_cobertura !== null) {
             localStorage.setItem('id_cobertura', usuario.id_cobertura.toString()); // Guarda la cobertura médica del usuario
           } else {
-            console.error('id_cobertura no está definido en la respuesta del servidor');
+            console.warn('id_cobertura no está definido o es null en la respuesta del servidor');
+            localStorage.removeItem('id_cobertura'); // Elimina cualquier valor previo de id_cobertura
           }
         } else {
           console.error('Error al obtener la cobertura médica del usuario');

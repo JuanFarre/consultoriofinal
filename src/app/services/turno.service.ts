@@ -7,8 +7,6 @@ import { Turno } from '../interfaces/turno';
   providedIn: 'root'
 })
 export class TurnoService {
- 
-
   private apiUrl = 'http://localhost:4000/api'; // Ajusta esta URL según sea necesario
 
   constructor(private http: HttpClient) { }
@@ -54,5 +52,12 @@ export class TurnoService {
     });
     return this.http.get<any>(`${this.apiUrl}/obtenerAgenda/${id_medico}`, { headers });
   }
-  
+
+  obtenerTurnosPaciente(id_paciente: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+    return this.http.get<any>(`${this.apiUrl}/obtenerTurnoPaciente/${id_paciente}`, { headers });
+  }
 }

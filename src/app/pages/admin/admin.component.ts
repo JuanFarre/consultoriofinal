@@ -15,6 +15,7 @@ export class AdminComponent implements OnInit {
   usuarios: Usuario[] = [];
   filteredUsuarios: Usuario[] = [];
   coberturas: any[] = [];
+  especialidades: any[] = [];
   usuarioForm: FormGroup;
   isEditing: boolean = false;
   currentUserId: number | null = null;
@@ -35,13 +36,15 @@ export class AdminComponent implements OnInit {
       email: [''],
       telefono: [''],
       password: [''],
-      id_cobertura: [null]
+      id_cobertura: [null],
+      id_especialidad: [null] // Add this line
     });
   }
 
   ngOnInit(): void {
     this.cargarUsuarios();
     this.cargarCoberturas();
+    this.cargarEspecialidades();
   }
 
   cargarUsuarios(): void {
@@ -71,6 +74,19 @@ export class AdminComponent implements OnInit {
     );
   }
 
+  cargarEspecialidades(): void {
+    this.especialidadService.obtenerEspecialidades().subscribe(
+      (response: any) => {
+        if (response.codigo === 200) {
+          this.especialidades = response.payload;
+        } else {
+          console.error(response.mensaje);
+        }
+      },
+      error => console.error(error)
+    );
+  }
+
   filtrarUsuarios(event: any): void {
     const filterValue = event.target.value.toLowerCase();
     this.filteredUsuarios = this.usuarios.filter(usuario =>
@@ -85,12 +101,28 @@ export class AdminComponent implements OnInit {
     if (usuarioData.id_cobertura === null) {
       usuarioData.id_cobertura = null;
     }
-
+  
     this.usuarioService.crearUsuario(usuarioData).subscribe(
       response => {
+        console.log('Crear usuario response:', response); // Log the response
         if (response.codigo === 200) {
           this.cargarUsuarios();
           this.limpiarFormulario();
+  
+          // If the user is a "Medico", assign the specialty
+          if (usuarioData.rol === 'medico' && usuarioData.id_especialidad) {
+            const id_medico = response.payload[0].id_usuario; // Extract id_usuario from the payload array
+            console.log('ID Medico:', id_medico); // Log the ID Medico
+            const id_especialidad = usuarioData.id_especialidad;
+            this.especialidadService.crearMedicoEspecialidad({ id_medico, id_especialidad }).subscribe(
+              res => {
+                if (res.codigo !== 200) {
+                  console.error(res.mensaje);
+                }
+              },
+              error => console.error(error)
+            );
+          }
         } else {
           console.error(response.mensaje);
         }
@@ -98,7 +130,6 @@ export class AdminComponent implements OnInit {
       error => console.error(error)
     );
   }
-
   editarUsuario(usuario: Usuario): void {
     const dialogRef = this.dialog.open(EditarUsuarioDialogComponent, {
       width: '400px',
