@@ -33,3 +33,7 @@ table {
 .mat-form-field {
   width: 100%;
 }
+
+.mat-form-field.error .mat-form-field-wrapper {
+  border-color: red;
+}

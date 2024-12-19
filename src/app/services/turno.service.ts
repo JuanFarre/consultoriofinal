@@ -23,6 +23,13 @@ export class TurnoService {
     });
     return this.http.get<any>(`${this.apiUrl}/obtenerMedicosPorFecha/${fecha}`, { headers });
   }
+  eliminarTurno(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+    return this.http.delete<any>(`${this.apiUrl}/eliminarTurnoPaciente/${id}`, { headers });
+  }
 
   obtenerTurnoMedico(body: any, token: string): Observable<any> {
     const headers = new HttpHeaders({

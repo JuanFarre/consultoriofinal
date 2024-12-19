@@ -48,15 +48,24 @@ h2 {
 }
 
 /* Estilo del date picker y el formulario */
-input[type="date"],
-input[type="time"],
-button {
-    width: 60%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
+.filtro-fecha {
+    display: flex;
+    align-items: center;
+}
+
+.filtro-fecha label {
+    margin-right: 8px;
+}
+
+.filtro-fecha input[type="date"] {
+    margin-right: 8px;
+    padding: 4px;
+    font-size: 14px;
+}
+
+.filtro-fecha button {
+    padding: 4px 8px;
+    font-size: 14px;
 }
 
 /* Color y estilo de botones */
@@ -71,7 +80,6 @@ button {
 button:hover {
     background-color: #60a869; /* Color verde más oscuro en hover */
 }
-
 
 table {
     width: 80%;

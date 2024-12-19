@@ -18,6 +18,7 @@ export class RegisterPageComponent implements OnInit {
   confirmPassword: string = "";
   isSubmitting: boolean = false;
   coberturas: any[] = [];
+  mensaje: string = ''; // Variable para almacenar el mensaje de éxito o error
 
   constructor(
     private formBuilder: FormBuilder,
@@ -55,7 +56,7 @@ export class RegisterPageComponent implements OnInit {
 
   registrarUsuario(): void {
     if (this.registroForm.value.password !== this.registroForm.value.confirmPassword) {
-      console.error('Las contraseñas no coinciden');
+      this.mensaje = 'Las contraseñas no coinciden';
       return;
     }
 
@@ -70,12 +71,14 @@ export class RegisterPageComponent implements OnInit {
       this.usuarioService.crearUsuario(usuario).subscribe({
         next: (response) => {
           console.log('Usuario registrado exitosamente:', response);
+          this.mensaje = 'Registro exitoso';
           if (this.dialogRef) {
             this.dialogRef.close();
           }
         },
         error: (err) => {
           console.error('Error al registrar el usuario:', err);
+          this.mensaje = 'Error al registrar el usuario';
           this.isSubmitting = false;
         },
         complete: () => {
@@ -83,7 +86,7 @@ export class RegisterPageComponent implements OnInit {
         }
       });
     } else {
-      console.error('Formulario inválido');
+      this.mensaje = 'Formulario inválido';
     }
   }
 

@@ -3,7 +3,9 @@
   <div class="filtro-fecha">
       <label for="fecha">Fecha:</label>
       <input type="date" id="fecha" [value]="fechaSeleccionada" (change)="cambiarFecha($event)">
-  </div>
+      <button mat-button (click)="volver()">Volver</button>
+
+    </div>
   <div class="tabla-medicos" *ngFor="let especialidad of medicosPorEspecialidad">
       <h3>{{ especialidad.especialidad }}</h3>
       <table mat-table [dataSource]="especialidad.medicos" class="mat-elevation-z8">

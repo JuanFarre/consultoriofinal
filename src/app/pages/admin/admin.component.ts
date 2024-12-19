@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Usuario } from 'src/app/interfaces/usuario';
@@ -28,16 +28,16 @@ export class AdminComponent implements OnInit {
     public dialog: MatDialog
   ) {
     this.usuarioForm = this.fb.group({
-      dni: [''],
-      apellido: [''],
-      nombre: [''],
-      fecha_nacimiento: [''],
-      rol: [''],
-      email: [''],
-      telefono: [''],
-      password: [''],
+      dni: ['', Validators.required],
+      apellido: ['', Validators.required],
+      nombre: ['', Validators.required],
+      fecha_nacimiento: ['', Validators.required],
+      rol: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      telefono: ['', Validators.required],
+      password: ['', Validators.required],
       id_cobertura: [null],
-      id_especialidad: [null] // Add this line
+      id_especialidad: [null]
     });
   }
 
@@ -97,39 +97,52 @@ export class AdminComponent implements OnInit {
   }
 
   agregarUsuario(): void {
-    const usuarioData = this.usuarioForm.value;
-    if (usuarioData.id_cobertura === null) {
-      usuarioData.id_cobertura = null;
-    }
-  
-    this.usuarioService.crearUsuario(usuarioData).subscribe(
-      response => {
-        console.log('Crear usuario response:', response); // Log the response
-        if (response.codigo === 200) {
-          this.cargarUsuarios();
-          this.limpiarFormulario();
-  
-          // If the user is a "Medico", assign the specialty
-          if (usuarioData.rol === 'medico' && usuarioData.id_especialidad) {
-            const id_medico = response.payload[0].id_usuario; // Extract id_usuario from the payload array
-            console.log('ID Medico:', id_medico); // Log the ID Medico
-            const id_especialidad = usuarioData.id_especialidad;
-            this.especialidadService.crearMedicoEspecialidad({ id_medico, id_especialidad }).subscribe(
-              res => {
-                if (res.codigo !== 200) {
-                  console.error(res.mensaje);
-                }
-              },
-              error => console.error(error)
-            );
+    if (this.usuarioForm.valid) {
+      const usuarioData = this.usuarioForm.value;
+      const fechaNacimiento = new Date(usuarioData.fecha_nacimiento);
+      const fechaActual = new Date();
+
+      if (fechaNacimiento > fechaActual) {
+        console.error('La fecha de nacimiento no puede ser una fecha futura');
+        return;
+      }
+
+      if (usuarioData.id_cobertura === null) {
+        usuarioData.id_cobertura = null;
+      }
+
+      this.usuarioService.crearUsuario(usuarioData).subscribe(
+        response => {
+          console.log('Crear usuario response:', response); // Log the response
+          if (response.codigo === 200) {
+            this.cargarUsuarios();
+            this.limpiarFormulario();
+
+            // If the user is a "Medico", assign the specialty
+            if (usuarioData.rol === 'medico' && usuarioData.id_especialidad) {
+              const id_medico = response.payload[0].id_usuario; // Extract id_usuario from the payload array
+              console.log('ID Medico:', id_medico); // Log the ID Medico
+              const id_especialidad = usuarioData.id_especialidad;
+              this.especialidadService.crearMedicoEspecialidad({ id_medico, id_especialidad }).subscribe(
+                res => {
+                  if (res.codigo !== 200) {
+                    console.error(res.mensaje);
+                  }
+                },
+                error => console.error(error)
+              );
+            }
+          } else {
+            console.error(response.mensaje);
           }
-        } else {
-          console.error(response.mensaje);
-        }
-      },
-      error => console.error(error)
-    );
+        },
+        error => console.error(error)
+      );
+    } else {
+      console.error('El formulario no está completo');
+    }
   }
+
   editarUsuario(usuario: Usuario): void {
     const dialogRef = this.dialog.open(EditarUsuarioDialogComponent, {
       width: '400px',

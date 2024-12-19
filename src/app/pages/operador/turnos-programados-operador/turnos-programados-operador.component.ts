@@ -5,6 +5,7 @@ import { EspecialidadService } from 'src/app/services/especialidad.service';
 import { TurnoService } from 'src/app/services/turno.service'; // Importa el servicio de turnos
 import { EditarAgendaModalComponent } from '../editar-agenda-modal/editar-agenda-modal.component';
 import { TurnosDialogComponent } from '../turnos-dialog/turnos-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-turnos-programados-operador',
@@ -18,6 +19,7 @@ export class TurnosProgramadosOperadorComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
+    private router: Router,
     private agendaService: AgendaService,
     private especialidadService: EspecialidadService,
     private turnoService: TurnoService // Inyecta el servicio de turnos
@@ -113,9 +115,13 @@ export class TurnosProgramadosOperadorComponent implements OnInit {
     this.turnoService.obtenerTurnoMedico(body, token).subscribe(response => {
       if (response.codigo === 200) {
         console.log('Turnos obtenidos:', response.payload); // Verifica los turnos obtenidos
+        const turnosConId = response.payload.map((turno: any) => ({
+          ...turno,
+          id: turno.id // Asegúrate de que el id esté presente
+        }));
         const dialogRef = this.dialog.open(TurnosDialogComponent, {
           width: '400px',
-          data: { turnos: response.payload, medico: medico, fecha: this.fechaSeleccionada }
+          data: { turnos: turnosConId, medico: medico, fecha: this.fechaSeleccionada }
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -128,4 +134,8 @@ export class TurnosProgramadosOperadorComponent implements OnInit {
       console.error('Error en la petición', error);
     });
   }
+  volver() {
+    this.router.navigate(['/operador']);
+  }
+  
 }

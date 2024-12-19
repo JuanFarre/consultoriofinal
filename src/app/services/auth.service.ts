@@ -64,6 +64,10 @@ export class AuthService {
     return this.loggedInSubject.asObservable();
   }
 
+  getUserRole(): string {
+    return localStorage.getItem('rol') || '';
+  }
+
   private hasToken(): boolean {
     return !!localStorage.getItem('token');
   }
